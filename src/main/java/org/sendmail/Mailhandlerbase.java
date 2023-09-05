@@ -1,11 +1,14 @@
 package org.sendmail;
 
-import javax.mail.Authenticator;
-import javax.mail.Message;
-import javax.mail.Session;
-import javax.mail.Transport;
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
+import javax.mail.*;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import java.io.File;
 import java.util.Properties;
 import java.util.Scanner;
 
@@ -34,13 +37,28 @@ public class Mailhandlerbase {
             System.out.println("Subject");
             String subject = scan.nextLine();
             mailmessage.setSubject(subject);
+
+
+            BodyPart messagebody = new MimeBodyPart();
             System.out.println("Mail body");
             String body = scan.nextLine();
-            mailmessage.setText(body);
+            messagebody.setText(body);
+            //attachment
+            MimeBodyPart msgbody = new MimeBodyPart();
+            msgbody.attachFile(new File("C:/Users/gobin/OneDrive/Desktop/arrays/arrays.docx"));
+
+            Multipart multipart = new MimeMultipart();
+            multipart.addBodyPart(messagebody);
+            multipart.addBodyPart(msgbody);
+
+            mailmessage.setContent(multipart);
+
+
             Transport.send(mailmessage);
             System.out.println("Mail sent succesfullyly..!!!");
         }catch (Exception ex){
             System.out.println("Error during sending mail");
+            System.out.println(ex);
         }
 
 
